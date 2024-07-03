@@ -14,3 +14,5 @@ const Pergunta = connection.define('perguntas',{
 });
 //Executa a criação da tabela
 Pergunta.sync({force: false}).then(()=>{}); 
+
+module.exports = Pergunta;

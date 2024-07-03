@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./database/database");
-const perguntaModel = require("./database/Pergunta");
+const Pergunta = require("./database/Pergunta"); //Importando Model Pergunta
 
 //Database teste de conexão
 connection
@@ -15,7 +15,7 @@ connection
         console.log(msgErro);
     })
 
-
+//Para o Express usar o EJS como View engine
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
@@ -26,7 +26,12 @@ app.use(bodyParser.json());
 
 // Rotas
 app.get("/",(req, res)=>{
-    res.render("index");
+    Pergunta.findAll({raw: true}).then(perguntas =>{
+        res.render("index",{
+            perguntas: perguntas
+        });
+    });
+    
 });
 
 app.get("/perguntar",(req, res) =>{
@@ -37,7 +42,15 @@ app.get("/perguntar",(req, res) =>{
 app.post("/salvarpergunta",(req, res) => {
     var titulo = req.body.titulo;
     var descricao = req.body.descricao;
-    res.send("<h1>Formulário recebido!</h1> <br> Título: " + titulo +"<br> Descrição: " + descricao);
+    
+    //Salvar no banco
+    Pergunta.create({
+        titulo: titulo,
+        descricao: descricao
+    }).then(()=>{
+        res.redirect("/");
+    });
+
 });
 
 app.listen(8080,()=>{console.log("App rodando!");});
