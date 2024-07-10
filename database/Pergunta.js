@@ -2,7 +2,7 @@
 const Sequelize = require("sequelize");
 const connection = require("./database");
 
-//Cria tabela Pergunta no banco
+//Cria tabela Pergunta no banco      tabela
 const Pergunta = connection.define('perguntas',{
     titulo:{
         type: Sequelize.STRING, allowNull: false
